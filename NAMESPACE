@@ -1,0 +1,6 @@
+useDynLib(saeMSPE, .registration=TRUE)
+importFrom(Rcpp, evalCpp)
+importFrom("stats", "aggregate", "nlminb", "sd")
+importFrom("Matrix", "bdiag")
+exportPattern("^[[:alpha:]]+")
+

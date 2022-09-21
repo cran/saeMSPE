@@ -7,39 +7,42 @@ Compute MSPE through double bootstrap(DB) method for Nested error regression mod
 This function returns MSPE estimator with double bootstrap method for Nested error regression model.
 }
 \usage{
-mspeNERdb(ni, X, Y, Xmean, K = 50, C = 50, method)
+mspeNERdb(ni, X, Y, Xmean, K = 50, C = 50, method = 1)
 }
 \arguments{
   \item{ni}{
-a numeric vector. It represents the sample number for every small area.
+(vector). It represents the sample number for every small area.
 }
   \item{X}{
-a numeric matrix.  It represents the small area response.
+(matrix).  It represents the small area response.
 }
   \item{Y}{
-a numeric vector. It represents the design matrix.
+(vector). It represents the design matrix.
 }
   \item{Xmean}{
-a numeric matrix. Stands for the population mean of auxiliary values.
-}
-  \item{method}{
-The MSPE estimation method to be used. See "Details".
+(matrix). Stands for the population mean of auxiliary values.
 }
   \item{K}{
-It represents the first bootstrap sample number. Default value is 50.
+(integer). It represents the first bootstrap sample number. Default value is 50.
 }
   \item{C}{
-It represents the second bootstrap sample number. Default value is 50.
+(integer). It represents the second bootstrap sample number. Default value is 50.
+}
+  \item{method}{
+The variance component estimation method to be used. See "Details".
 }
 }
 \details{
 This method was proposed by P. Hall and T. Maiti. Double bootstrap method uses boostrap tool twice for NER model to avoid the unattractivitive bias correction: one is to estimate the estimator bias, the other is to correct for bias.
 
-Default value for \code{method} is 2, \code{method = 2} represents the REML method and \code{method = 1} represents MOM method.
-
+Default value for \code{method} is 1, \code{method = 1} represents the MOM method , \code{method = 2} and \code{method = 3} represents ML and REML method, respectively.
 }
 \value{
-This function returns a vector of the MSPE estimates based on double bootstrap method.
+This function returns a list with components:
+\item{MSPE}{(vector) MSPE estimates for NER model.}
+\item{bhat}{(vector) Estimates of the unknown regression coefficients.}
+\item{sigvhat2}{(numeric) Estimates of the area-specific variance component.}
+\item{sigehat2}{(numeric) Estimates of the random error variance component.}
 }
 \references{
 F. B. Butar and P. Lahiri. On measures of uncertainty of empirical bayes small area estimators. \emph{Journal of Statistical Planning and Inference}, 112(1-2):63-76, 2003.
@@ -100,6 +103,6 @@ for(tt in 1: m){
   Xmean[tt, ] = colMeans(Population[which(Population[,p+2] == tt), 1:p])
 }
 ### mspe result
-result = mspeNERdb(ni, X, Y, Xmean, 10, 10, method = 2)
+mspeNERdb(ni, X, Y, Xmean, 10, 10, method = 1)
 }
 

@@ -1,27 +1,34 @@
-\name{mspeNERlnr}
-\alias{mspeNERlnr}
+\name{mspeNERlin}
+\alias{mspeNERlin}
+\alias{mspeNERPR}
+\alias{mspeNERDL}
 \title{
 Compute MSPE through linearization method for Nested error regression model
 }
 \description{
-This function returns MSPE estimator with linearization appoximation method for Nested error regression model.
+This function returns MSPE estimator with linearization method for Nested error regression model. These include the seminal Prasad-Rao method and its generalizations by Datta-Lahiri. All these methods are developed for general linear mixed effects models.
 }
 \usage{
-mspeNERlnr(ni, X, Y, X.mean, method = "PR", var.method = "default")
+mspeNERlin(ni, X, Y, X.mean, method = "PR", var.method = "default")
+
+mspeNERPR(ni, X, Y, X.mean, var.method = "default")
+
+mspeNERDL(ni, X, Y, X.mean, var.method = "default")
+
 }
 
 \arguments{
   \item{ni}{
-a numeric vector. It represents the sample number for every small area.
+(vector). It represents the sample number for every small area.
 }
   \item{X}{
-a numeric matrix. Stands for the available auxiliary values.
+(matrix). Stands for the available auxiliary values.
 }
   \item{Y}{
-a numeric vector. It represents the response value for Nested error regression model.
+(vector). It represents the response value for Nested error regression model.
 }
   \item{X.mean}{
-a numeric matrix. Stands for the population mean of auxiliary values.
+(matrix). Stands for the population mean of auxiliary values.
 }
   \item{method}{
 The MSPE estimation method to be used. See "Details".
@@ -31,8 +38,7 @@ The variance component estimation method to be used. See "Details".
 }
 }
 \details{
-Default \code{method} for \code{mspeNERlnr} is "PR" ,proposed by N. G. N. Prasad and J. N. K. Rao, Prasad-Rao (PR) method uses Taylor series expansion to obtain a second-order approximation to
-the MSPE. Function \code{mspeNERlnr} also provide the following method:
+Default \code{method} for \code{mspeNERlin} is "PR" ,proposed by N. G. N. Prasad and J. N. K. Rao, Prasad-Rao (PR) method uses Taylor series expansion to obtain a second-order approximation to the MSPE. Function \code{mspeNERlin} also provide the following method:
 
 Method "DL" advanced PR method to cover the cases when the variance components are estimated by ML and REML estimator. Set \code{method = "DL"}.
 
@@ -43,7 +49,11 @@ For \code{method = "DL"}, \code{var.method = "ML"} or \code{var.method = "REML"}
 }
 
 \value{
-This function returns a vector of the MSPE estimates.
+This function returns a list with components:
+\item{MSPE}{(vector) MSPE estimates for NER model.}
+\item{bhat}{(vector) Estimates of the unknown regression coefficients.}
+\item{sigvhat2}{(numeric) Estimates of the area-specific variance component.}
+\item{sigehat2}{(numeric) Estimates of the random error variance component.}
 }
 
 \references{
@@ -101,6 +111,6 @@ for(tt in 1: m){
   Xmean[tt, ] = colMeans(Population[which(Population[,p+2] == tt), 1:p])
 }
 ### mspe result
-result = mspeNERlnr(ni, X, Y, Xmean, method = "PR", var.method = "default")
+mspeNERlin(ni, X, Y, Xmean, method = "PR", var.method = "default")
 }
 

@@ -1,27 +1,27 @@
 \name{mspeNERjack}
 \alias{mspeNERjack}
 \title{
-Compute MSPE through resampling method for Nested error regression model
+Compute MSPE through Jackknife-based MSPE estimation method for Nested error regression model
 }
 \description{
-This function returns MSPE estimator with jackknife appoximation method for Nested error regression model.
+This function returns MSPE estimator with Jackknife-based MSPE estimation method for Nested error regression model.
 }
 \usage{
-mspeNERjack(ni, X, Y, Xmean, method)
+mspeNERjack(ni, X, Y, Xmean, method = 1)
 }
 
 \arguments{
   \item{ni}{
-a numeric vector. It represents the sample number for every small area.
+(vector). It represents the sample number for every small area.
 }
   \item{X}{
-a numeric matrix. Stands for the available auxiliary values.
+(matrix). Stands for the available auxiliary values.
 }
   \item{Y}{
-a numeric vector. It represents the response value for Nested error regression model.
+(vector). It represents the response value for Nested error regression model.
 }
   \item{Xmean}{
-a numeric matrix. Stands for the population mean of auxiliary values.
+(matrix). Stands for the population mean of auxiliary values.
 }
   \item{method}{
 The MSPE estimation method to be used. See "Details".
@@ -30,13 +30,18 @@ The MSPE estimation method to be used. See "Details".
 }
 
 \details{
-This method was proposed by J. Jiang and L. S. M. Wan, jackknife method is used to obtain the bias and variation of estimators.
+This bias-corrected jackknife MSPE estimator was proposed by J. Jiang and L. S. M. Wan, it covers a fairly general class of mixed models which includes gLMM, mixed logistic model and some of the widely used mixed linear models as special cases.
 
-Default value for \code{method} is 2, \code{method = 2} represents the REML method and \code{method = 1} represents MOM method.
+Default value for \code{method} is 1, \code{method = 1} represents the MOM method , \code{method = 2} and \code{method = 3} represents ML and REML method, respectively.
+
 }
 
 \value{
-This function returns a vector of the MSPE estimates based on jackknife method.
+This function returns a list with components:
+\item{MSPE}{(vector) MSPE estimates for NER model.}
+\item{bhat}{(vector) Estimates of the unknown regression coefficients.}
+\item{sigvhat2}{(numeric) Estimates of the area-specific variance component.}
+\item{sigehat2}{(numeric) Estimates of the random error variance component.}
 }
 
 \references{
@@ -97,6 +102,6 @@ for(tt in 1: m){
   Xmean[tt, ] = colMeans(Population[which(Population[,p+2] == tt), 1:p])
 }
 ### mspe result
-result = mspeNERjack(ni, X, Y, Xmean)
+mspeNERjack(ni, X, Y, Xmean, method = 1)
 }
 

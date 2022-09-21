@@ -12,25 +12,35 @@ varner(ni, X, Y, method)
 
 \arguments{
   \item{ni}{
-a numeric vector. It represents the sample number for every small area.
+(vector). It represents the sample number for every small area.
 }
   \item{X}{
-a numeric matrix. Stands for the available auxiliary values.
+(matrix). Stands for the available auxiliary values.
 }
   \item{Y}{
-a numeric vector. It represents the response value for Nested error regression model.
+(vector). It represents the response value for Nested error regression model.
 }
   \item{method}{
 The variance component estimation method to be used. See "Details".
 }
 }
 \value{
-This function returns a list of the variance component estimates.
+This function returns a list with components:
+\item{bhat}{(vector) Estimates of the unknown regression coefficients.}
+\item{sigvhat2}{(numeric) Estimates of the area-specific variance component.}
+\item{sigehat2}{(numeric) Estimates of the random error variance component.}
 }
 \details{
 Default value for \code{method} is 1, It represents the moment estimator, Also called ANOVA estimator, The available variance component estimation method are list as follows:
-\code{method = 1} represents the MOM estimator;
-\code{method = 2} represents the restricted maximum likelihood(REML) estimator; \code{method = 3} represents the maximum likelihood(ML) estimator;  
+
+\code{method = 1} represents the MOM estimator; 
+
+\code{method = 2} represents the restricted maximum likelihood (REML) estimator; 
+
+\code{method = 3} represents the maximum likelihood (ML) estimator;  
+
+\code{method = 4} represents the empirical bayesian (EB) estimator;  
+
 }
 
 \references{
@@ -82,6 +92,6 @@ XY = sampleXY(Ni, ni, m, Population)[[1]]
 X = XY[, 1:p]
 Y = XY[, p+1]
 ### variance component estimate
-result = varner(ni,X,Y,1)
+varner(ni,X,Y,1)
 }
 

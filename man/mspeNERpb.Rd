@@ -7,33 +7,40 @@ Compute MSPE through parameter bootstrap method for Nested error regression mode
 This function returns MSPE estimator with parameter bootstrap appoximation method for Nested error regression model
 }
 \usage{
-mspeNERpb(ni, X, Y, Xmean, K = 50)
+mspeNERpb(ni, X, Y, Xmean, K = 50, method = 4)
 }
 
 \arguments{
   \item{ni}{
-a numeric vector. It represents the sample number for every small area.
+(vector). It represents the sample number for every small area.
 }
   \item{Y}{
-a numeric vector. It represents the response value for Nested error regression model.
+(vector). It represents the response value for Nested error regression model.
 }
   \item{X}{
-a numeric matrix. Stands for the available auxiliary values.
+(matrix). Stands for the available auxiliary values.
 }
   \item{Xmean}{
-a numeric matrix. Stands for the population mean of auxiliary values.
+(matrix). Stands for the population mean of auxiliary values.
 }
   \item{K}{
-It represents the Monte-Carlo sample number. Default value is 50
+(integer). It represents the bootstrap sample number. Default value is 50.
+}
+  \item{method}{
+The variance component estimation method to be used. See "Details".
 }
 
 }
 \details{
-This method was proposed by Peter Hall and T. Maiti. Parametric bootstrap (pb) method uses bootstrap-based method to measure the accuracy of EB estimator.
+This method was proposed by Peter Hall and T. Maiti. Parametric bootstrap (pb) method uses bootstrap-based method to measure the accuracy of EB estimator. In this case, only EB estimator is available (\code{method = 4}).
 
 }
 \value{
-This function returns a vector of the MSPE estimates based on parameter bootstrap method.
+This function returns a list with components:
+\item{MSPE}{(vector) MSPE estimates for NER model.}
+\item{bhat}{(vector) Estimates of the unknown regression coefficients.}
+\item{sigvhat2}{(numeric) Estimates of the area-specific variance component.}
+\item{sigehat2}{(numeric) Estimates of the random error variance component.}
 }
 \references{
 F. B. Butar and P. Lahiri. On measures of uncertainty of empirical bayes small area estimators. \emph{Journal of Statistical Planning and Inference}, 112(1-2):63-76, 2003.
@@ -94,6 +101,6 @@ for(tt in 1: m){
   Xmean[tt, ] = colMeans(Population[which(Population[,p+2] == tt), 1:p])
 }
 ### mspe result
-result = mspeNERpb(ni, X, Y, Xmean, 50)
+mspeNERpb(ni, X, Y, Xmean, 50)
 }
 

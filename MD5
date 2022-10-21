@@ -1,8 +1,9 @@
-cd31903ca95a2d4e6cecd6c5efcf4850 *DESCRIPTION
+e8702af456e9a6351d5300936f482eb5 *DESCRIPTION
 3f9eac7330b00cb212373b5cf78e1753 *NAMESPACE
 d5933d56842147035bc0f8536b7afa3b *R/RcppExports.R
 d01e20f3eef587a8eda9722b8f2e8209 *R/mspeFHlin.R
 564312baa6ebda76c01a8fa0eafba3e2 *R/mspeNERlin.R
+e60bd3db8ce8c1d08545456d00591ed5 *data/wheatarea.rdata
 7f6694e152de9d997ed076c3b1bca878 *man/mspeFHdb.Rd
 3412e93612a862c5ed080494c7d32ac0 *man/mspeFHjack.Rd
 cb269fad41bdd7d254fc9dfef2c13bfc *man/mspeFHlin.Rd
@@ -13,9 +14,10 @@ de350eccf9bb60ec8c72604735acfbb1 *man/mspeNERjack.Rd
 47964f51216e4f2d4e9b8d6e80510f93 *man/mspeNERlin.Rd
 eb2a49692479fb2e6f63ff7749467d7e *man/mspeNERpb.Rd
 4732d0ae14fdc29fcf2ea4e382b3d1e1 *man/mspeNERsumca.Rd
-0560b167d31f97fca448e032ecae8294 *man/saeMSPE-package.Rd
+86b8b6f014078a1bd5990fc3a88059ba *man/saeMSPE-package.Rd
 acc23979d25676aadb67a17231a72a4c *man/varfh.Rd
 42dade44db5be3d8b0f8ed83d8c239f8 *man/varner.Rd
+a4e334f6dc15bb0e85dc5ed427cce895 *man/wheatarea.Rd
 61059660eb073d93e00e8ee054237071 *src/Makevars
 61059660eb073d93e00e8ee054237071 *src/Makevars.win
 f065fed11a5ec4f7d655579fbecb7d5f *src/RcppExports.cpp

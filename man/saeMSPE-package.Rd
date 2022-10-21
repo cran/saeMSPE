@@ -13,10 +13,10 @@ We describe a new R package entitled 'saeMSPE' for the well-known Fay Herriot mo
 \tabular{ll}{
 Package: \tab saeMSPE\cr
 Type: \tab Package\cr
-Version: \tab 1.1\cr
-Date: \tab 2022-09-05\cr
+Version: \tab 1.2\cr
+Date: \tab 2022-10-19\cr
 License: \tab GPL (>=2)\cr
-Depends: \tab Matrix\cr
+Depends: \tab Matrix, smallarea\cr
 }
 
 }

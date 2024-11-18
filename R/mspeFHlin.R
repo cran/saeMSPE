@@ -6,8 +6,25 @@
 # (iii) sampling variance vector
 #' @rdname varfh
 #' @export
-varOBP= function(Y, X, D){
+varOBP= function(formula, data, D, na_rm=FALSE, na_omit=FALSE){
+  model_frame <- model.frame(formula, data)
+  Y <- model.response(model_frame)
+  X <- model.matrix(formula, data)
+  D = as.vector(D)
   qfun = function(A){
+    # Handling missing values
+    if (na_rm) {
+      # Remove rows with missing values from X, Y, and adjust ni accordingly
+      complete_cases <- complete.cases(X, Y)
+      X <- X[complete_cases, ]
+      Y <- Y[complete_cases]
+      D <- D[complete_cases]
+    } else if (na_omit) {
+      # Stop if there are any missing values
+      if (anyNA(X) || anyNA(Y) || anyNA(D)) {
+        stop("Input contains missing values (NA). Please handle missing data before proceeding.")
+      }
+    }
     # Defines object funtion for Observed best prediction method
     m = nrow(X)
     gamma2 = diag((D/(A+D))^2)
@@ -29,13 +46,35 @@ varOBP= function(Y, X, D){
 # The function below gives the Prasad & Rao (1990) MSPE estimator
 #' @rdname mspeFHlin
 #' @export
-mspeFHPR = function(Y, X, D, var.method = "default" ){
+mspeFHPR = function(formula, data, D, var.method = "default", na_rm=FALSE, na_omit=FALSE){
   # default variance component estimation method is moment estimator ("MOM")
   if(var.method != "MOM" & var.method != "default" ) stop("var.method is not available")
+  model_frame <- model.frame(formula, data)
+  Y <- model.response(model_frame)
+  X <- model.matrix(formula, data)
+  D = as.vector(D)
+  
+  # Handling missing values
+  if (na_rm) {
+    # Remove rows with missing values from X, Y, and adjust ni accordingly
+    complete_cases <- complete.cases(X, Y)
+    X <- X[complete_cases, ]
+    Y <- Y[complete_cases]
+    D <- D[complete_cases]
+  } else if (na_omit) {
+    # Stop if there are any missing values
+    if (anyNA(X) || anyNA(Y) || anyNA(D)) {
+      stop("Input contains missing values (NA). Please handle missing data before proceeding.")
+    }
+  }
+  
   A = smallarea::prasadraoest(Y, X, D)$estimate
+  m = length(D)
   if(A < 0){A = 0}
   V.inv = diag(1/(A+D))
-  betA = solve(t(X)%*%V.inv%*%X)%*%t(X)%*%V.inv%*%Y
+  p1 = apply(sapply(1:m, function(tt) V.inv[tt, tt] * X[tt, ] %*% t(X[tt, ]), simplify = "array"), 1:2, sum)
+  p2 = apply(sapply(1:m, function(tt) V.inv[tt, tt] * X[tt, ] * Y[tt], simplify = "array"), 1, sum)
+  betA = solve(p1)%*%p2
   m = length(Y); p = ncol(X)
   g1iA = g2iA = g3iA = c()
   for(i in 1:m){
@@ -56,8 +95,27 @@ mspeFHPR = function(Y, X, D, var.method = "default" ){
 # The function below gives the Datta & Lahiri (2000) MSPE estimator
 #' @rdname mspeFHlin
 #' @export
-mspeFHDL=function(Y, X, D, var.method = "default" ){
+mspeFHDL=function(formula, data, D, var.method = "default", na_rm = FALSE, na_omit = FALSE){
   # default variance component estimation method is restricted maximum 
+  model_frame <- model.frame(formula, data)
+  Y <- model.response(model_frame)
+  X <- model.matrix(formula, data)
+  D = as.vector(D)
+  
+  # Handling missing values
+  if (na_rm) {
+    # Remove rows with missing values from X, Y, and adjust ni accordingly
+    complete_cases <- complete.cases(X, Y)
+    X <- X[complete_cases, ]
+    Y <- Y[complete_cases]
+    D <- D[complete_cases]
+  } else if (na_omit) {
+    # Stop if there are any missing values
+    if (anyNA(X) || anyNA(Y) || anyNA(D)) {
+      stop("Input contains missing values (NA). Please handle missing data before proceeding.")
+    }
+  }
+  
   # likelihood estimator ("REML")
   if(var.method == "REML" | var.method == "default" ){
     A = smallarea::resimaxilikelihood(Y, X, D, 1000)$estimate
@@ -66,8 +124,11 @@ mspeFHDL=function(Y, X, D, var.method = "default" ){
     A = smallarea::maximlikelihood(Y, X, D)$estimate
   } else stop("var.method is not available")
   if(A < 0){A = 0}
+  m = length(D)
   V.inv = diag(1/(A+D))
-  betA = solve(t(X)%*%V.inv%*%X)%*%t(X)%*%V.inv%*%Y
+  p1 = apply(sapply(1:m, function(tt) V.inv[tt, tt] * X[tt, ] %*% t(X[tt, ]), simplify = "array"), 1:2, sum)
+  p2 = apply(sapply(1:m, function(tt) V.inv[tt, tt] * X[tt, ] * Y[tt], simplify = "array"), 1, sum)
+  betA = solve(p1)%*%p2
   m = length(Y); p = ncol(X)
   g1iA = g2iA = g3iA = c()
   for(i in 1:m){
@@ -92,13 +153,35 @@ mspeFHDL=function(Y, X, D, var.method = "default" ){
 # The function below gives the Datta & Rao & Smith (2005) MSPE estimator
 #' @rdname mspeFHlin
 #' @export
-mspeFHDRS = function(Y, X, D, var.method = "default" ){
+mspeFHDRS = function(formula, data, D, var.method = "default",na_rm = FALSE, na_omit = FALSE){
   if(var.method != "EB" & var.method != "default" ) stop("var.method is not available")
   # default variance component estimation method is empirical bayesian estimator ("EB")
+  model_frame <- model.frame(formula, data)
+  Y <- model.response(model_frame)
+  X <- model.matrix(formula, data)
+  D = as.vector(D)
+  
+  # Handling missing values
+  if (na_rm) {
+    # Remove rows with missing values from X, Y, and adjust ni accordingly
+    complete_cases <- complete.cases(X, Y)
+    X <- X[complete_cases, ]
+    Y <- Y[complete_cases]
+    D <- D[complete_cases]
+  } else if (na_omit) {
+    # Stop if there are any missing values
+    if (anyNA(X) || anyNA(Y) || anyNA(D)) {
+      stop("Input contains missing values (NA). Please handle missing data before proceeding.")
+    }
+  }
+  
   A = smallarea::fayherriot(Y, X, D)$estimate
   if(A < 0){A = 0}
+  m = length(D)
   V.inv = diag(1/(A+D))
-  betA = solve(t(X)%*%V.inv%*%X)%*%t(X)%*%V.inv%*%Y
+  p1 = apply(sapply(1:m, function(tt) V.inv[tt, tt] * X[tt, ] %*% t(X[tt, ]), simplify = "array"), 1:2, sum)
+  p2 = apply(sapply(1:m, function(tt) V.inv[tt, tt] * X[tt, ] * Y[tt], simplify = "array"), 1, sum)
+  betA = solve(p1)%*%p2
   m = length(Y); p = ncol(X)
   g1iA = g2iA = g3iA = c()
   trsum1 = sum((A + D )^(-1))
@@ -127,15 +210,36 @@ mspeFHDRS = function(Y, X, D, var.method = "default" ){
 # The function below gives the Modified PR (Liu,2005) MSPE estimator
 #' @rdname mspeFHlin
 #' @export
-mspeFHMPR = function(Y, X, D, var.method = "default" ){
+mspeFHMPR = function(formula, data, D, var.method = "default", na_rm = FALSE, na_omit = FALSE){
   if(var.method != "OBP" & var.method != "default" ) stop("var.method is not available")
   # default variance component estimation method is observed best prediction 
+  model_frame <- model.frame(formula, data)
+  Y <- model.response(model_frame)
+  X <- model.matrix(formula, data)
+  D = as.vector(D)
+  
+  # Handling missing values
+  if (na_rm) {
+    # Remove rows with missing values from X, Y, and adjust ni accordingly
+    complete_cases <- complete.cases(X, Y)
+    X <- X[complete_cases, ]
+    Y <- Y[complete_cases]
+    D <- D[complete_cases]
+  } else if (na_omit) {
+    # Stop if there are any missing values
+    if (anyNA(X) || anyNA(Y) || anyNA(D)) {
+      stop("Input contains missing values (NA). Please handle missing data before proceeding.")
+    }
+  }
+  
   # estimator ("OBP")
-  A = varOBP(Y, X, D)
+  A = varOBP(formula, data, D)
   if(A < 0){A = 0}
   m = length(Y); p = ncol(X)
   V.inv = diag(1/(A+D))
-  betA = solve(t(X)%*%V.inv%*%X)%*%t(X)%*%V.inv%*%Y
+  p1 = apply(sapply(1:m, function(tt) V.inv[tt, tt] * X[tt, ] %*% t(X[tt, ]), simplify = "array"), 1:2, sum)
+  p2 = apply(sapply(1:m, function(tt) V.inv[tt, tt] * X[tt, ] * Y[tt], simplify = "array"), 1, sum)
+  betA = solve(p1)%*%p2
   AD = A + D
   AD2 = AD^2
   hatr = D / AD; hatr2 = hatr^2
@@ -174,33 +278,49 @@ mspeFHMPR = function(Y, X, D, var.method = "default" ){
 # (ii) variance component estimator
 
 #' @export
-mspeFHlin = function(Y, X, D, method = "PR", var.method = "default"){
+mspeFHlin = function(formula, data, D, method = "PR", var.method = "default", na_rm = FALSE, na_omit = FALSE){
   # calculate MSPE through several linearization approximation method
-  Y = as.vector(Y)
-  X = as.matrix(X)
+  model_frame <- model.frame(formula, data)
+  Y <- model.response(model_frame)
+  X <- model.matrix(formula, data)
   D = as.vector(D)
+
+  # Handling missing values
+  if (na_rm) {
+    # Remove rows with missing values from X, Y, and adjust ni accordingly
+    complete_cases <- complete.cases(X, Y)
+    X <- X[complete_cases, ]
+    Y <- Y[complete_cases]
+    D <- D[complete_cases]
+  } else if (na_omit) {
+    # Stop if there are any missing values
+    if (anyNA(X) || anyNA(Y) || anyNA(D)) {
+      stop("Input contains missing values (NA). Please handle missing data before proceeding.")
+    }
+  }
+  
   m = length(Y); p = ncol(X)
   if(m != nrow(X)){stop( "length of response doesnot match rowlength of designmatrix" )}
   else{if(m != length(D)){stop( "length of response does not match with the number of variances of the random effects" )}
     else{
       if(method == "PR"){
         # PR mspe approximation method (Prasad and Rao 1990)
-        result = mspeFHPR(Y, X, D, var.method)
+        result = mspeFHPR(formula, data, D, var.method, na_rm, na_omit)
         return(result)
       }
       if(method == "DL"){
         # DL mspe approximation method (Datta and Lahiri 2000)
-        result = mspeFHDL(Y, X, D, var.method)
+        result = mspeFHDL(formula, data, D, var.method, na_rm, na_omit)
         return(result)
       }
       if(method == "DRS"){
         # DRS mspe approximation method (Datta ,Rao ,Smith 2005)
-        result = mspeFHDRS(Y, X, D, var.method)
+        result = mspeFHDRS(formula, data, D, var.method, na_rm, na_omit)
         return(result)
       }
       if(method == "MPR"){
         # MPR mspe approximation method (Liu 2020)
-        result = mspeFHMPR(Y, X, D, var.method)
+        result = mspeFHMPR(formula, data, D, var.method, na_rm, na_omit)
         return(result)
       }
       # Available Linearization method includes "PR","DL","DRS","MPR".

@@ -7,15 +7,16 @@ Compute MSPE through parameter bootstrap method for Fay Herriot model
 This function returns MSPE estimator with parameter bootstrap method for Fay Herriot model.
 }
 \usage{
-mspeFHpb(Y, X, D, K = 50, method = 4)
+mspeFHpb(formula, data, D, K = 50, method = 4, na_rm, na_omit)
 }
 
 \arguments{
-  \item{Y}{
-(vector). It represents the response value for Fay Herriot model.
+  \item{formula}{
+(formula). Stands for the model formula that specifies the auxiliary variables to be used in the regression model. 
+    This should follow the R model formula syntax.
 }
-  \item{X}{
-(matrix). Stands for the available auxiliary values.
+  \item{data}{
+(data frame). It represents the data containing the response values and auxiliary variables for the Nested Error Regression Model.
 }
   \item{D}{
 (vector). It represents the knowing sampling variance for Fay Herriot model.
@@ -25,6 +26,17 @@ mspeFHpb(Y, X, D, K = 50, method = 4)
 }
   \item{method}{
 The variance component estimation method to be used. See "Details".
+}
+  \item{na_rm}{
+  A logical value indicating whether to remove missing values (NaN) from the input matrices and vectors. 
+  If \code{TRUE}, missing values in the input data (\code{X}, \code{Y}, and \code{D}) are automatically cleaned using internal functions.
+  If \code{FALSE}, missing values are not removed. Defaults to \code{FALSE}.
+}
+  \item{na_omit}{
+  A logical value indicating whether to stop the execution if missing values (NaN) are present in the input data. 
+  If \code{TRUE}, the function will check for missing values in \code{X}, \code{Y}, and \code{D}. 
+  If any missing values are found, an error message will be raised, prompting the user to handle the missing data before proceeding. 
+  Defaults to \code{FALSE}.
 }
 }
 \details{
@@ -48,16 +60,18 @@ Peter Hall and T. Maiti. On parametric bootstrap methods for small area predicti
 H. T. Maiti and T. Maiti. Nonparametric estimation of mean squared prediction error in nested error regression models. \emph{Annals of Statistics}, 34(4):1733-1750, 2006b.
 }
 \author{
-Peiwen Xiao, Xiaohui Liu, Yuzi Liu, Jiming Jiang, and Shaochu Liu
+Peiwen Xiao, Xiaohui Liu, Yu Zhang, Yuzi Liu, Jiming Jiang
 }
 
 
 \examples{
-X = matrix(runif(10 * 3), 10, 3)
-X[,1] = rep(1, 10) 
-D = (1:10) / 10 + 0.5
-Y = X \%*\% c(0.5,1,1.5) + rnorm(10, 0, sqrt(2)) + rnorm(10, 0, sqrt(D))
-mspeFHpb(Y, X, D, K = 50, method = 4)
+X <- matrix(runif(10 * 3), 10, 3)
+X[,1] <- rep(1, 10) 
+D <- (1:10) / 10 + 0.5
+Y <- X \%*\% c(0.5, 1, 1.5) + rnorm(10, 0, sqrt(2)) + rnorm(10, 0, sqrt(D))
+data <- data.frame(Y = Y, X1 = X[,2], X2 = X[,3])
+formula <- Y ~ X1 + X2
+result <- mspeFHpb(formula, data, D, K = 50, method = 4)
 }
 
 

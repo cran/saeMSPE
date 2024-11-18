@@ -21,7 +21,7 @@ Depends: \tab Matrix, smallarea\cr
 
 }
 \author{
-Peiwen Xiao, Xiaohui Liu, Yuzi Liu, Jiming Jiang, Shaochu Liu
+Peiwen Xiao, Xiaohui Liu, Yu Zhang, Yuzi Liu, Jiming Jiang
 
 Maintainer: Peiwen Xiao <2569613200@qq.com>
 }

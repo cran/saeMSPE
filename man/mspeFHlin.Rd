@@ -8,27 +8,28 @@
 Compute MSPE through linearization method for Fay Herriot model
 }
 \description{
-This function returns MSPE estimator with linearization method for Fay Herriot model. These include the seminal Prasad-Rao method and its generalizations by Datta-Lahiri, Datta-Rao-Smith and Liu et.al. All these methods are developed for general linear mixed effects models.
+This function returns MSPE estimator with linearization method for Fay Herriot model. These include the seminal Prasad-Rao method and its generalizations by Datta-Lahiri, Datta-Rao-Smith and Liu et.al. All these methods are developed for general linear mixed effects models
 }
 \usage{
-mspeFHlin(Y, X, D, method = "PR", var.method = "default")
+mspeFHlin(formula, data, D, method = "PR", var.method = "default", na_rm, na_omit)
 
-mspeFHPR(Y, X, D, var.method = "default")
+mspeFHPR(formula, data, D, var.method = "default", na_rm, na_omit)
 
-mspeFHDL(Y, X, D, var.method = "default")
+mspeFHDL(formula, data, D, var.method = "default", na_rm, na_omit)
 
-mspeFHDRS(Y, X, D, var.method = "default")
+mspeFHDRS(formula, data, D, var.method = "default", na_rm, na_omit)
 
-mspeFHMPR(Y, X, D, var.method = "default")
+mspeFHMPR(formula, data, D, var.method = "default", na_rm, na_omit)
 
 }
 
 \arguments{
-  \item{Y}{
-(vector). It represents the response value for Fay Herriot model.
+  \item{formula}{
+(formula). Stands for the model formula that specifies the auxiliary variables to be used in the regression model. 
+    This should follow the R model formula syntax.
 }
-  \item{X}{
-(matrix). It stands for the available auxiliary values.
+  \item{data}{
+(data frame). It represents the data containing the response values and auxiliary variables for the Nested Error Regression Model.
 }
   \item{D}{
 (vector). Stands for the known sampling variances of each small area levels.
@@ -39,11 +40,22 @@ The MSPE estimation method to be used. See "Details".
   \item{var.method}{
 The variance component estimation method to be used. See "Details".
 }
+  \item{na_rm}{
+  A logical value indicating whether to remove missing values (NaN) from the input matrices and vectors. 
+  If \code{TRUE}, missing values in the input data (\code{X}, \code{Y}, and \code{D}) are automatically cleaned using internal functions.
+  If \code{FALSE}, missing values are not removed. Defaults to \code{FALSE}.
+}
+  \item{na_omit}{
+  A logical value indicating whether to stop the execution if missing values (NaN) are present in the input data. 
+  If \code{TRUE}, the function will check for missing values in \code{X}, \code{Y}, and \code{D}. 
+  If any missing values are found, an error message will be raised, prompting the user to handle the missing data before proceeding. 
+  Defaults to \code{FALSE}.
+}
 }
 \details{
-Default \code{method} for \code{mspeFHlin} is "PR" ,proposed by N. G. N. Prasad and J. N. K. Rao, Prasad-Rao (PR) method uses Taylor series expansion to obtain a second-order approximation to the MSPE. Function \code{mspeFHlin} also provide the following methods:
+Default \code{method} for \code{mspeFHlin} is "PR",proposed by N. G. N. Prasad and J. N. K. Rao, Prasad-Rao (PR) method uses Taylor series expansion to obtain a second-order approximation to the MSPE. Function \code{mspeFHlin} also provide the following methods:
 
-Method "DL" proposed by Datta and Lahiri , It advanced PR method to cover the cases when the variance components are estimated by ML and REML estimator. Set \code{method = "DL"}.
+Method "DL" proposed by Datta and Lahiri, It advanced PR method to cover the cases when the variance components are estimated by ML and REML estimator. Set \code{method = "DL"}.
 
 Method "DRS" proposed by Datta and Smith, It focus on the second order unbiasedness appoximation when the variance component is replaced by Empirical Bayes estimator. Set \code{method = "DRS"}.
 
@@ -77,7 +89,7 @@ G. S. Datta and R. D. D. Smith. On measuring the variability of small area estim
 X. Liu, H. Ma, and J. Jiang. That prasad-rao is robust: Estimation of mean squared prediction error of observed best predictor under potential model misspecification. \emph{Statistica Sinica}, 2020.
 }
 \author{
-Peiwen Xiao, Xiaohui Liu, Yuzi Liu, Jiming Jiang, and Shaochu Liu
+Peiwen Xiao, Xiaohui Liu, Yu Zhang, Yuzi Liu, Jiming Jiang
 }
 
 
@@ -86,6 +98,8 @@ X = matrix(runif(10 * 3), 10, 3)
 X[,1] = rep(1, 10) 
 D = (1:10) / 10 + 0.5
 Y = X \%*\% c(0.5,1,1.5) + rnorm(10, 0, sqrt(2)) + rnorm(10, 0, sqrt(D))
-mspeFHlin(Y,X,D,method = "PR", var.method = "default")
+data <- data.frame(Y = Y, X1 = X[,2], X2 = X[,3])
+formula <- Y ~ X1 + X2
+result <- mspeFHlin(formula, data, D, method = "PR", var.method = "default")
 }
 

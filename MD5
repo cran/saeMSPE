@@ -1,8 +1,8 @@
-bb556465ae408e12f7983700a7e5da38 *DESCRIPTION
+3e6d41daed05fd976e66c884ce6cd475 *DESCRIPTION
 4d32f0b081340424e72271dc7ca92d38 *NAMESPACE
 445142b36e565165a4915ba33ebe9790 *R/RcppExports.R
 e049cd698ea198de531daa3bdc67d19d *R/mspeFHlin.R
-a0c9e6f2f52d5a6ed7254fa749bf5cf3 *R/mspeNERlin.R
+9a950a0211d33406a4d20628fa2aeb57 *R/mspeNERlin.R
 e60bd3db8ce8c1d08545456d00591ed5 *data/wheatarea.rdata
 acdee4998be69c9e88d07fcb9a1de6db *man/mspeFHdb.Rd
 c54b5cf59e7774ae90f212b7960d7ac2 *man/mspeFHjack.Rd

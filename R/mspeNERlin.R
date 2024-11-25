@@ -130,7 +130,7 @@ mspeNERDL = function(ni, formula, data, X.mean,
   XtVX = matrix(0, p, p)
   for (i in 1:m) {
     vtemp = 1/sige2 * diag(ni[i]) - sigv2/((ni[i]*sigv2+sige2)*sige2)*rep(1,ni[i])%*%t(rep(1,ni[i]))
-    idxt = sum(ni[1:t-1])+1:(ni[t])
+    idxt = sum(ni[1:i-1])+1:(ni[i])
     XtVX = XtVX + t(X[idxt, ,drop = F]) %*% vtemp %*% X[idxt, ,drop = F]
   }
   gama = ni * sigv2 / (ni*sigv2 + sige2)
